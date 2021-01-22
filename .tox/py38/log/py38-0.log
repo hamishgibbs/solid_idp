@@ -1,3 +1,0 @@
-action: py38, msg: getenv
-cwd: /Users/hamishgibbs/Documents/Personal/solid_idp/.tox
-cmd: /usr/local/opt/python@3.8/bin/python3.8 -m venv py38
