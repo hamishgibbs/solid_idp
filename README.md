@@ -13,6 +13,7 @@ The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/)
 Features (implemented [x] or planned [ ]) are as follows:
 
 [ ] Register a WebID
+[ ] Register a Client with Client ID and Client Secret
 [ ] Provide a SOLID oidcRegistration document (or client supplied parameters) [SOLID_OIDC §5.1](https://solid.github.io/authentication-panel/solid-oidc/#clientids-webid).
   [ ] Depends on resolving a WebID to an RDF document per [WebID 1.0 §6](https://www.w3.org/2005/Incubator/webid/spec/identity/#processing-the-webid-profile).
 [ ] Provide clients with a DPoP-bound Access Token [SOLID_OIDC §6.1](https://solid.github.io/authentication-panel/solid-oidc/#tokens-access)<sup>†</sup>.
@@ -48,3 +49,5 @@ Review, contributions, and discussion are welcome.
 # Acknowledgements
 
 This library relies on draft SOLID specifications authored by the [Solid project](https://solidproject.org/).
+
+It's the future. :rocket:
