@@ -1,0 +1,16 @@
+action: py38, msg: envreport
+cwd: /Users/hamishgibbs/Documents/Personal/solid_idp
+cmd: /Users/hamishgibbs/Documents/Personal/solid_idp/.tox/py38/bin/python -m pip freeze
+attrs==20.3.0
+fastapi==0.63.0
+iniconfig==1.1.1
+packaging==20.8
+passlib==1.7.4
+pluggy==0.13.1
+py==1.10.0
+pydantic==1.7.3
+pyparsing==2.4.7
+pytest==6.2.1
+solid-idp==0.0.1
+starlette==0.13.6
+toml==0.10.2

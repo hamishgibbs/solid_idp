@@ -1,0 +1,42 @@
+action: GLOB, msg: packaging
+cwd: /Users/hamishgibbs/Documents/Personal/solid_idp
+cmd: /Users/hamishgibbs/anaconda3/bin/python setup.py sdist --formats=zip --dist-dir .tox/dist
+running sdist
+running egg_info
+writing solid_idp.egg-info/PKG-INFO
+writing dependency_links to solid_idp.egg-info/dependency_links.txt
+writing requirements to solid_idp.egg-info/requires.txt
+writing top-level names to solid_idp.egg-info/top_level.txt
+reading manifest file 'solid_idp.egg-info/SOURCES.txt'
+writing manifest file 'solid_idp.egg-info/SOURCES.txt'
+running check
+creating solid_idp-0.0.1
+creating solid_idp-0.0.1/solid_idp
+creating solid_idp-0.0.1/solid_idp.egg-info
+copying files to solid_idp-0.0.1...
+copying README.md -> solid_idp-0.0.1
+copying setup.py -> solid_idp-0.0.1
+copying solid_idp/__init__.py -> solid_idp-0.0.1/solid_idp
+copying solid_idp/main.py -> solid_idp-0.0.1/solid_idp
+copying solid_idp.egg-info/PKG-INFO -> solid_idp-0.0.1/solid_idp.egg-info
+copying solid_idp.egg-info/SOURCES.txt -> solid_idp-0.0.1/solid_idp.egg-info
+copying solid_idp.egg-info/dependency_links.txt -> solid_idp-0.0.1/solid_idp.egg-info
+copying solid_idp.egg-info/requires.txt -> solid_idp-0.0.1/solid_idp.egg-info
+copying solid_idp.egg-info/top_level.txt -> solid_idp-0.0.1/solid_idp.egg-info
+Writing solid_idp-0.0.1/setup.cfg
+creating '.tox/dist/solid_idp-0.0.1.zip' and adding 'solid_idp-0.0.1' to it
+adding 'solid_idp-0.0.1'
+adding 'solid_idp-0.0.1/solid_idp.egg-info'
+adding 'solid_idp-0.0.1/solid_idp'
+adding 'solid_idp-0.0.1/PKG-INFO'
+adding 'solid_idp-0.0.1/README.md'
+adding 'solid_idp-0.0.1/setup.py'
+adding 'solid_idp-0.0.1/setup.cfg'
+adding 'solid_idp-0.0.1/solid_idp.egg-info/PKG-INFO'
+adding 'solid_idp-0.0.1/solid_idp.egg-info/SOURCES.txt'
+adding 'solid_idp-0.0.1/solid_idp.egg-info/requires.txt'
+adding 'solid_idp-0.0.1/solid_idp.egg-info/top_level.txt'
+adding 'solid_idp-0.0.1/solid_idp.egg-info/dependency_links.txt'
+adding 'solid_idp-0.0.1/solid_idp/__init__.py'
+adding 'solid_idp-0.0.1/solid_idp/main.py'
+removing 'solid_idp-0.0.1' (and everything under it)
