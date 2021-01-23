@@ -3,3 +3,4 @@
 .db
 __pycache__
 solid_idp.egg-info
+data

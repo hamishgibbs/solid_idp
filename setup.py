@@ -13,7 +13,8 @@ setuptools.setup(
         'passlib>=1.7.4',
         'bcrypt>=3.2.0',
         'python-jose>=0.2.0',
-        'python-multipart>=0.0.5'
+        'python-multipart>=0.0.5',
+        'rdflib>=5.0.0'
     ],
     packages=setuptools.find_packages(),
     classifiers=[

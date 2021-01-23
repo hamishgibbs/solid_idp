@@ -14,10 +14,11 @@ import os
 import json
 from datetime import datetime, timedelta
 from typing import Optional
-import db
+import db as userdb
+import data as userdata
 
 from fastapi import Depends, FastAPI, HTTPException, status, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -27,7 +28,8 @@ SECRET_KEY = "68c0d742c73a40ff258fbcffc74ec254e51b8f9746b3513cf32cd13914adde02"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-USER_DB = '../.db/oidc/users/users'
+USER_METADATA = '../.db/oidc/users/users'
+USER_DATA = '../data'
 
 class Token(BaseModel):
     access_token: str
@@ -68,9 +70,9 @@ def get_user(username: str):
 
     user_fn = username + '.json'
 
-    if user_fn in os.listdir(USER_DB):
+    if user_fn in os.listdir(USER_METADATA):
 
-        with open(USER_DB + '/' + user_fn, "r") as f:
+        with open(USER_METADATA + '/' + user_fn, "r") as f:
             user_dict = json.load(f)
 
         return user_dict
@@ -129,9 +131,12 @@ async def home():
     return {'type': 'Super API by Hamish'}
 
 
-@app.get("/webid/{username}")
+@app.get("/{username}/card")
 async def get_oidc_registration(username: str):
-    return {'type': username}
+
+    profile_path = USER_DATA + '/' + username + '/profile/card.ttl'
+
+    return FileResponse(profile_path)
 
 
 @app.post("/register")
@@ -143,7 +148,7 @@ async def regster(username: str = Form(default=None),
 
     user_fn = username + '.json'
 
-    if user_fn in os.listdir(USER_DB):
+    if user_fn in os.listdir(USER_METADATA):
 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -152,12 +157,16 @@ async def regster(username: str = Form(default=None),
 
     else:
 
-        db.create_user(username=username,
-                       hashed_password=get_password_hash(password),
-                       email=email,
-                       full_name=full_name,
-                       disabled=disabled,
-                       db=USER_DB)
+        userdb.create_user(username=username,
+                           hashed_password=get_password_hash(password),
+                           email=email,
+                           full_name=full_name,
+                           disabled=disabled,
+                           db=USER_METADATA)
+
+        userdata.create_personal_profile_document(username=username,
+                                                  data_path=USER_DATA,
+                                                  iss='http://127.0.0.1:8000')
 
         return {"message": "Successfully created user."}
 

@@ -21,4 +21,7 @@ login_res.status_code
 login_res.text
 
 # OIDC registration document workflow
-login_res = r.post('http://127.0.0.1:8000/webid/test')
+login_res = r.get('http://127.0.0.1:8000/another/card')
+
+login_res.status_code
+login_res.text
