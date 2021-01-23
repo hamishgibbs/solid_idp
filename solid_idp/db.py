@@ -27,7 +27,7 @@ def create_user(username: str,
 
     user = {
         'username': username,
-        'hashed_password': username,
+        'hashed_password': hashed_password,
         'email': email,
         'full_name': full_name,
         'disabled': disabled

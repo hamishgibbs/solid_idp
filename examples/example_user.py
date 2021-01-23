@@ -9,7 +9,7 @@ login_res.status_code
 login_res.json()
 
 # Account regsitration workflow
-creds = {"username": "another",
+creds = {"username": "test",
          "password": "secret",
          "email": "test@test.com",
          "full_name": "testy test",
@@ -21,7 +21,7 @@ login_res.status_code
 login_res.text
 
 # OIDC registration document workflow
-login_res = r.get('http://127.0.0.1:8000/another/card')
+login_res = r.get('http://127.0.0.1:8000/test/card')
 
 login_res.status_code
 login_res.text
