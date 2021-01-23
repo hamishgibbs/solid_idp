@@ -10,11 +10,14 @@
 # client uses token to gain access to thing
 # list of scope types understood - contacts.read contacts.write etc.
 #
-
+import os
+import json
 from datetime import datetime, timedelta
 from typing import Optional
+import db
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, Form
+from fastapi.responses import RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -24,16 +27,7 @@ SECRET_KEY = "68c0d742c73a40ff258fbcffc74ec254e51b8f9746b3513cf32cd13914adde02"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-fake_users_db = {
-    "johndoe": {
-        "username": "johndoe",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
-        "disabled": False,
-    }
-}
-
+USER_DB = '../.db/oidc/users/users'
 
 class Token(BaseModel):
     access_token: str
@@ -70,17 +64,25 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
+def get_user(username: str):
+
+    user_fn = username + '.json'
+
+    if user_fn in os.listdir(USER_DB):
+
+        with open(USER_DB + '/' + user_fn, "r") as f:
+            user_dict = json.load(f)
+
+        return user_dict
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(username: str, password: str):
+
+    user = get_user(username)
+
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user['hashed_password']):
         return False
     return user
 
@@ -110,7 +112,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = get_user(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -127,9 +129,44 @@ async def home():
     return {'type': 'Super API by Hamish'}
 
 
+@app.get("/{username}")
+async def get_oidc_registration(username: str):
+    return {'type': username}
+
+
+@app.post("/register")
+async def regster(username: str = Form(default=None),
+                  password: str = Form(default=None),
+                  email: str = Form(default=None),
+                  full_name: str = Form(default=None),
+                  disabled: bool = Form(default=None)):
+
+    user_fn = username + '.json'
+
+    if user_fn in os.listdir(USER_DB):
+
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username already exists",
+        )
+
+    else:
+
+        db.create_user(username=username,
+                       hashed_password=get_password_hash(password),
+                       email=email,
+                       full_name=full_name,
+                       disabled=disabled,
+                       db=USER_DB)
+
+        return {"message": "Successfully created user."}
+
+
+
+
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -138,7 +175,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.username}, expires_delta=access_token_expires
+        data={"sub": user['username']}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
