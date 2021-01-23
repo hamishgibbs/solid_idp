@@ -13,7 +13,6 @@
 
 from datetime import datetime, timedelta
 from typing import Optional
-from graphene_pydantic import PydanticObjectType
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm

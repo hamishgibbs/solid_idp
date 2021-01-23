@@ -8,10 +8,12 @@ setuptools.setup(
     description="Solid IdP.",
     url="https://github.com/hamishgibbs/solid_idp",
     install_requires=[
-        'fastapi',
-        'pydantic',
-        'passlib',
-        'bcrypt'
+        'fastapi>=0.63.0',
+        'pydantic>=1.7.3',
+        'passlib>=1.7.4',
+        'bcrypt>=3.2.0',
+        'python-jose>=0.2.0',
+        'python-multipart>=0.0.5'
     ],
     packages=setuptools.find_packages(),
     classifiers=[
