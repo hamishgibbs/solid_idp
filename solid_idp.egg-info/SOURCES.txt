@@ -1,9 +1,0 @@
-README.md
-setup.py
-solid_idp/__init__.py
-solid_idp/main.py
-solid_idp.egg-info/PKG-INFO
-solid_idp.egg-info/SOURCES.txt
-solid_idp.egg-info/dependency_links.txt
-solid_idp.egg-info/requires.txt
-solid_idp.egg-info/top_level.txt

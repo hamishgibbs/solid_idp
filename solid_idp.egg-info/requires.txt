@@ -1,4 +1,0 @@
-fastapi
-pydantic
-passlib
-bcrypt
