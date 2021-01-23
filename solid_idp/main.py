@@ -129,7 +129,7 @@ async def home():
     return {'type': 'Super API by Hamish'}
 
 
-@app.get("/{username}")
+@app.get("/webid/{username}")
 async def get_oidc_registration(username: str):
     return {'type': username}
 
