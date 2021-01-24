@@ -8,7 +8,7 @@ The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.g
 
 # Features
 
-The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID servers. In this library, we implement an Identity Provider (IdP) which can register agents, display PersonalProfileDocument documents, and grant access tokens (DPoP-bound Access Tokens, OIDC ID Tokens, and refresh tokens).
+The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID resource servers. In this library, we implement an Identity Provider (IdP) which can register agents, display PersonalProfileDocument documents, and grant access tokens (DPoP-bound Access Tokens, OIDC ID Tokens, and refresh tokens).
 
 Features (implemented or planned) are as follows:
 
