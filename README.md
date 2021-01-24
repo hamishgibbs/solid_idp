@@ -22,6 +22,7 @@ Features (implemented [x] or planned [ ]) are as follows:
 [X] Provides access to OpenID Provider Configuration Information at `/.well-known/openid-configuration` per [OpenID Connect Discovery 1.0 §4](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig).
 [ ] Uses https to secure client-server communication per [SOLID §2.1](https://solid.github.io/specification/protocol#http)
 [ ] Implements frontend interface for agent authentication.
+[ ] Implements frontend interface for agent permission grants.
 
 <sup>†</sup>In the event that client provides one of the following:
 
@@ -51,11 +52,13 @@ The API is configured in `solid_idp/main.py`. To start the development server, e
 
 ``` shell
 cd solid_idp
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
 An example of an agent authentication flow is located in `examples/example_user.py`.  
 An example of a client authentication flow is located in `examples/example_client.py`.  
+
+Examples currently assume that the IdP is available at http://127.0.0.1:8000/ and the Client is available at http://127.0.0.1:8001/.
 
 # Contributions
 

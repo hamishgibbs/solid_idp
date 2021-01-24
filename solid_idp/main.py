@@ -1,15 +1,3 @@
-
-# auth flow
-
-# SQL db of login credentials (username & password)
-# redirect to solid_idp domain to login
-# redirect to "XXX would like to access XXX"
-# redirect to redirect uri (stored in "redirect_uris" of solid:oidcRegistration)
-# check client secret with stored secret initiated by client
-# Grant tokens to client
-# client uses token to gain access to thing
-# list of scope types understood - contacts.read contacts.write etc.
-#
 import os
 import json
 from datetime import datetime, timedelta
@@ -339,6 +327,7 @@ async def get_access_token(grant_type: str,
 
     try:
 
+        # test that this is correctly checking key signature
         claims = jwt.decode(DPoP, dpop_public_key)
 
         claims.validate()

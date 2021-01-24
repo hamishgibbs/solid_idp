@@ -7,7 +7,7 @@ import urllib
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
-from authlib.jose import jwk, jwt, JsonWebKey
+from authlib.jose import jwt, JsonWebKey
 
 import uuid
 import datetime
