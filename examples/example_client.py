@@ -27,6 +27,7 @@ code_challenge = base64.b64encode(hashlib.sha256(random_secret.encode('ascii')).
 
 # request an authorisation code from IdP
 auth_endpoint = login_res.json()['authorization_endpoint']
+token_endpoint = login_res.json()['token_endpoint']
 
 auth_params = {'response_type': 'code',
                'redirect_uri': 'http://127.0.0.1:8001/callback',
@@ -92,7 +93,7 @@ auth_body = {
 }
 
 
-res = r.post("http://127.0.0.1:8000/token", params=auth_body, headers=auth_headers)
+res = r.post(token_endpoint, params=auth_body, headers=auth_headers)
 
 res.status_code
 res.json()

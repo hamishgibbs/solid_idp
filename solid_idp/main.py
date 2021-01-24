@@ -153,7 +153,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 @app.get("/")
 async def home():
-    return {'type': 'I am an example SOLID IdP.'}
+    return {'message': 'I am an example SOLID IdP.'}
 
 
 @app.get("/{username}/card")

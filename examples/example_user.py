@@ -3,7 +3,7 @@ import requests as r
 # Login workflow to recieve a JWT
 creds = {"username": "jade", "password": "i<3hamish"}
 
-login_res = r.post('http://127.0.0.1:8000/token', data=creds)
+login_res = r.post('http://127.0.0.1:8000/login', data=creds)
 
 login_res.status_code
 login_res.json()
