@@ -7,10 +7,13 @@ tmpdir = fixtures.tmpdir
 
 def test_init_user_data(tmpdir):
 
-    data.init_user_data(tmpdir, 'test')
-    print(os.listdir(tmpdir))
+    data_dir = tmpdir + '/data'
 
-    assert os.path.exists(tmpdir + '/data/test/profile')
+    os.mkdir(data_dir)
+
+    data.init_user_data(data_dir, 'test')
+
+    assert os.path.exists(data_dir + '/test/profile')
 
 
 def test_create_personal_profile_document(tmpdir):
