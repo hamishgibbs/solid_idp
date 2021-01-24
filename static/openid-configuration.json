@@ -1,0 +1,49 @@
+{
+    "issuer": "http://127.0.0.1:8000",
+    "authorization_endpoint": "http://127.0.0.1:8000/authorize",
+    "token_endpoint": "http://127.0.0.1:8000/token",
+    "userinfo_endpoint": "http://127.0.0.1:8000/userinfo",
+    "registration_endpoint": "http://127.0.0.1:8000/register",
+    "end_session_endpoint": "http://127.0.0.1:8000/endsession",
+    "jwks_uri": "http://127.0.0.1:8000/jwks",
+    "response_types_supported": [
+        "code"
+    ],
+    "grant_types_supported": [
+        "authorization_code",
+        "refresh_token"
+    ],
+    "subject_types_supported": [
+        "public"
+    ],
+    "claims_supported": [
+        "sub",
+        "webid"
+    ],
+    "scopes_supported": [
+        "openid",
+        "profile",
+        "email",
+        "offline_access"
+    ],
+    "token_endpoint_auth_methods_supported": [
+        "client_secret_basic"
+    ],
+    "token_endpoint_auth_signing_alg_values_supported": [
+        "ES256"
+    ],
+    "request_object_signing_alg_values_supported": [
+        "ES256"
+    ],
+    "id_token_signing_alg_values_supported": [
+        "ES256"
+    ],
+    "code_challenge_methods_supported": [
+        "plain",
+        "S256"
+    ],
+    "claims_parameter_supported": false,
+    "request_parameter_supported": true,
+    "request_uri_parameter_supported": false,
+    "require_request_uri_registration": false
+}
