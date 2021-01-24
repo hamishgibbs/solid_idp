@@ -35,14 +35,10 @@ public_key = key.public_key().public_bytes(
 IDP_PRIVATE_KEY = JsonWebKey.import_key(private_key, {'kty': 'EC'})
 IDP_PUBLIC_KEY = JsonWebKey.import_key(public_key, {'kty': 'EC'})
 
+USER_METADATA = './.db/oidc/users/users'
+CLIENT_METADATA = './.db/oidc/client'
+USER_DATA = './data'
 
-SECRET_KEY = "68c0d742c73a40ff258fbcffc74ec254e51b8f9746b3513cf32cd13914adde02"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-USER_METADATA = '../.db/oidc/users/users'
-CLIENT_METADATA = '../.db/oidc/client'
-USER_DATA = '../data'
 
 class Token(BaseModel):
     access_token: str
@@ -100,43 +96,6 @@ def authenticate_user(username: str, password: str):
     if not verify_password(password, user['hashed_password']):
         return False
     return user
-
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            raise credentials_exception
-        token_data = TokenData(username=username)
-    except JWTError:
-        raise credentials_exception
-    user = get_user(username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
-
-
-async def get_current_active_user(current_user: User = Depends(get_current_user)):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
 
 
 @app.get("/")
@@ -215,7 +174,7 @@ async def post_login(form_data: OAuth2PasswordRequestForm = Depends()):
 @app.get("/.well-known/openid_configuration")
 async def get_oid_configuration():
 
-    return FileResponse('../static/openid-configuration.json')
+    return FileResponse('./static/openid-configuration.json')
 
 
 @app.get("/authorize/")
@@ -376,13 +335,3 @@ async def get_access_token(grant_type: str,
     headers = {"content-type": "application/json"}
 
     return JSONResponse(content=all_tokens, headers=headers)
-
-
-@app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
-
-
-@app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
