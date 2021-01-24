@@ -1,5 +1,7 @@
 # Solid IdP
 
+[![GitHub Actions (Tests)](https://github.com/hamishgibbs/pull_facebook_data_for_good/workflows/Tests/badge.svg)]
+
 An example implementation of a [Solid](https://solidproject.org/) identity provider implemented in Python.
 
 The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/)  specification.
