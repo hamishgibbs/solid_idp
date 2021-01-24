@@ -27,7 +27,7 @@ Features (implemented or planned) are as follows:
 
 - [ ] Client ID and Secret, and valid DPoP Proof.
 - [X] Client WebID with a proper registration and valid DPoP Proof.
-- [ ] A Client ID of http://www.w3.org/ns/solid/terms#PublicOidcClient.
+- [ ] A Client ID of `http://www.w3.org/ns/solid/terms#PublicOidcClient`.
 
 For more information on DPoP proofs see the draft: [OAuth 2.0 DPoP §4](https://tools.ietf.org/html/draft-ietf-oauth-dpop-02#section-4).  
 
