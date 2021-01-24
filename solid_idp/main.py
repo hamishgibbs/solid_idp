@@ -2,9 +2,9 @@ import os
 import json
 from datetime import datetime, timedelta
 from typing import Optional
-import db as userdb
-import data as userdata
-import auth
+from solid_idp import db as userdb
+from solid_idp import data as userdata
+from solid_idp import auth
 import secrets
 import hashlib
 import base64
