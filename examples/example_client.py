@@ -25,8 +25,8 @@ random_secret = secrets.token_hex(10)
 code_challenge = base64.b64encode(hashlib.sha256(random_secret.encode('ascii')).digest())
 
 # request an authorisation code from IdP
-auth_endpoint = login_res.json()['authorization_endpoint']
-token_endpoint = login_res.json()['token_endpoint']
+auth_endpoint = res.json()['authorization_endpoint']
+token_endpoint = res.json()['token_endpoint']
 
 auth_params = {'response_type': 'code',
                'redirect_uri': 'http://127.0.0.1:8001/callback',
@@ -34,8 +34,8 @@ auth_params = {'response_type': 'code',
                'client_id': 'http://127.0.0.1:8001/webid#this',
                'code_challenge_method': 'S256',
                'code_challenge': code_challenge,
-               'user_username': 'jade',
-               'user_password': 'i<3hamish'}
+               'user_username': 'test_user',
+               'user_password': 'secret'}
 
 auth_res = r.get(auth_endpoint,
                  params=auth_params)

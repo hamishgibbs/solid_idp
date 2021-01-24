@@ -47,11 +47,15 @@ This library is being developed alongside an example implementation of a [Solid 
 
 # Usage
 
-The API is configured in `solid_idp/main.py`. To run a
+The API is configured in `solid_idp/main.py`. To start the development server, enter the `solid_idp` directory and initiate the server with `uvicorn`.
 
-``` 
-
+``` shell
+cd solid_idp
+uvicorn main:app --reload
 ```
+
+An example of an agent authentication flow is located in `examples/example_user.py`.  
+An example of a client authentication flow is located in `examples/example_client.py`.  
 
 # Contributions
 
@@ -59,4 +63,4 @@ This library is in the early stages of development and is intended to demonstrat
 
 # Acknowledgements
 
-This library relies on draft SOLID specifications authored by the [Solid project](https://solidproject.org/).
+This library relies on draft SOLID specifications authored by the [Solid Project](https://solidproject.org/).
