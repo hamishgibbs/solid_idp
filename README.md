@@ -55,6 +55,7 @@ uvicorn main:app --reload --port 8000
 ```
 
 An example of an agent authentication flow is located in `examples/example_user.py`.  
+
 An example of a client authentication flow is located in `examples/example_client.py`.  
 
 Examples currently assume that the IdP is available at http://127.0.0.1:8000/ and the Client is available at http://127.0.0.1:8001/.
