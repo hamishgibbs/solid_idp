@@ -23,7 +23,7 @@ Features (implemented or planned) are as follows:
 - [ ] Implements frontend interface for agent authentication.  
 - [ ] Implements frontend interface for agent permission grants.  
 
-<sup>†</sup>In the event that client provides one of the following:
+<sup>†</sup>In the event that the client provides one of the following:
 
 - [ ] Client ID and Secret, and valid DPoP Proof.
 - [X] Client WebID with a proper registration and valid DPoP Proof.
