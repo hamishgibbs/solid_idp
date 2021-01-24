@@ -12,17 +12,17 @@ The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/)
 
 Features (implemented [x] or planned [ ]) are as follows:
 
-[X] Register an agent
-[X] Provide an agent's PersonalProfileDocument document [SOLID_OIDC Primer §2.1](https://solid.github.io/authentication-panel/solid-oidc-primer/#authorization-code-pkce-flow-step-2.1).
-  [X] Depends on resolving an agent's URI to an RDF document.
-[X] Implements PKCE authentication flow to verify Client identity
-[X] Provide clients with a DPoP-bound Access Token [SOLID_OIDC §6.1](https://solid.github.io/authentication-panel/solid-oidc/#tokens-access)<sup>†</sup>.
-[X] Optionally provides clients with an OIDC ID Token [SOLID_OIDC §6.2](https://solid.github.io/authentication-panel/solid-oidc/#tokens-id)<sup>†</sup>.
-[X] Optionally provides clients with a refresh token<sup>†</sup>.
-[X] Provides access to OpenID Provider Configuration Information at `/.well-known/openid-configuration` per [OpenID Connect Discovery 1.0 §4](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig).
-[ ] Uses https to secure client-server communication per [SOLID §2.1](https://solid.github.io/specification/protocol#http)
-[ ] Implements frontend interface for agent authentication.
-[ ] Implements frontend interface for agent permission grants.
+[X] Register an agent.  
+[X] Provide an agent's PersonalProfileDocument document [SOLID_OIDC Primer §2.1](https://solid.github.io/authentication-panel/solid-oidc-primer/#authorization-code-pkce-flow-step-2.1).  
+  [X] Depends on resolving an agent's URI to an RDF document.  
+[X] Implements PKCE authentication flow to verify Client identity.  
+[X] Provide clients with a DPoP-bound Access Token [SOLID_OIDC §6.1](https://solid.github.io/authentication-panel/solid-oidc/#tokens-access)<sup>†</sup>.  
+[X] Optionally provides clients with an OIDC ID Token [SOLID_OIDC §6.2](https://solid.github.io/authentication-panel/solid-oidc/#tokens-id)<sup>†</sup>.  
+[X] Optionally provides clients with a refresh token<sup>†</sup>.  
+[X] Provides access to OpenID Provider Configuration Information at `/.well-known/openid-configuration` per [OpenID Connect Discovery 1.0 §4](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig).  
+[ ] Uses https to secure client-server communication per [SOLID §2.1](https://solid.github.io/specification/protocol#http).  
+[ ] Implements frontend interface for agent authentication.  
+[ ] Implements frontend interface for agent permission grants.  
 
 <sup>†</sup>In the event that client provides one of the following:
 
