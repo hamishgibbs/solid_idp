@@ -11,13 +11,12 @@ from authlib.jose import jwk, jwt, JsonWebKey
 
 import uuid
 import datetime
-# PKCE Code Flow
 
 # get IdP OID configuration
-login_res = r.get('http://127.0.0.1:8000/.well-known/openid_configuration')
+res = r.get('http://127.0.0.1:8000/.well-known/openid_configuration')
 
-login_res.status_code
-login_res.json()
+res.status_code
+res.json()
 
 # this is stored in session memory
 random_secret = secrets.token_hex(10)
@@ -100,4 +99,4 @@ res.json()
 
 # next steps:
 # Incorporate this workflow in solid_client
-# get these tokens workign with an example resource server
+# get these tokens working with an example resource server

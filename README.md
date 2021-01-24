@@ -8,46 +8,55 @@ The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.g
 
 # Features
 
-The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID servers. In this library, we implement an Identity Provider (IdP) which can register clients, display client WebID documents, and grant access tokens (DPoP-bound Access Tokens and OIDC ID Tokens).
+The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID servers. In this library, we implement an Identity Provider (IdP) which can register agents, display PersonalProfileDocument documents, and grant access tokens (DPoP-bound Access Tokens, OIDC ID Tokens, and refresh tokens).
 
 Features (implemented [x] or planned [ ]) are as follows:
 
-[ ] Register a WebID
-[ ] Register a Client with Client ID and Client Secret
-[ ] Provide a SOLID oidcRegistration document (or client supplied parameters) [SOLID_OIDC §5.1](https://solid.github.io/authentication-panel/solid-oidc/#clientids-webid).
-  [ ] Depends on resolving a WebID to an RDF document per [WebID 1.0 §6](https://www.w3.org/2005/Incubator/webid/spec/identity/#processing-the-webid-profile).
-[ ] Provide clients with a DPoP-bound Access Token [SOLID_OIDC §6.1](https://solid.github.io/authentication-panel/solid-oidc/#tokens-access)<sup>†</sup>.
-[ ] Provide clients with an OIDC ID Token [SOLID_OIDC §6.2](https://solid.github.io/authentication-panel/solid-oidc/#tokens-id)<sup>†</sup>.
-[ ] Provide access to OpenID Provider Configuration Information at `/.well-known/openid-configuration` per [OpenID Connect Discovery 1.0 §4](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig).
+[X] Register an agent
+[X] Provide an agent's PersonalProfileDocument document [SOLID_OIDC Primer §2.1](https://solid.github.io/authentication-panel/solid-oidc-primer/#authorization-code-pkce-flow-step-2.1).
+  [X] Depends on resolving an agent's URI to an RDF document.
+[X] Implements PKCE authentication flow to verify Client identity
+[X] Provide clients with a DPoP-bound Access Token [SOLID_OIDC §6.1](https://solid.github.io/authentication-panel/solid-oidc/#tokens-access)<sup>†</sup>.
+[X] Optionally provides clients with an OIDC ID Token [SOLID_OIDC §6.2](https://solid.github.io/authentication-panel/solid-oidc/#tokens-id)<sup>†</sup>.
+[X] Optionally provides clients with a refresh token<sup>†</sup>.
+[X] Provides access to OpenID Provider Configuration Information at `/.well-known/openid-configuration` per [OpenID Connect Discovery 1.0 §4](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig).
+[ ] Uses https to secure client-server communication per [SOLID §2.1](https://solid.github.io/specification/protocol#http)
+[ ] Implements frontend interface for agent authentication.
 
-<sup>†</sup>Considering the client provides one of the following:
+<sup>†</sup>In the event that client provides one of the following:
 
-* Client ID and Secret, and valid DPoP Proof.
-* Client WebID with a proper registration and valid DPoP Proof.
-* A Client ID of http://www.w3.org/ns/solid/terms#PublicOidcClient.
+[ ] Client ID and Secret, and valid DPoP Proof.
+[X] Client WebID with a proper registration and valid DPoP Proof.
+[ ] A Client ID of http://www.w3.org/ns/solid/terms#PublicOidcClient.
 
 For more information on DPoP proofs see the draft: [OAuth 2.0 DPoP §4](https://tools.ietf.org/html/draft-ietf-oauth-dpop-02#section-4).  
-A DPoP proof is confirmed by the associated public key stored in the "jkt" member of the "cnf" claim in the DPoP proof. For more information see the draft: [OAuth 2.0 DPoP §7](https://tools.ietf.org/html/draft-ietf-oauth-dpop-02#section-7).  
+
 For a description of the overall authentication flow see [OpenID Connect Core 1.0 §3.1.1](https://openid.net/specs/openid-connect-core-1_0.html#CodeFlowSteps).  
+
+Development of this library relies heavily on the [SOLID_OIDC Primer](https://solid.github.io/authentication-panel/solid-oidc-primer/).  
 
 # Resources
 
-Implementation is based on the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification.
+This implementation is based on the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification.
 
 The API interface is written using [FastAPI](https://github.com/tiangolo/fastapi).
 
 Python RDF support is provided by [rdflib](https://github.com/RDFLib/rdflib).
 
-This library is intended to pair with an [example implementation](https://github.com/hamishgibbs/solid_server) of a Solid server.
+This library is being developed alongside an example implementation of a [Solid resource server](https://github.com/hamishgibbs/solid_server) (currently under development) and an example implementation of a [Solid client](https://github.com/hamishgibbs/solid_client) (currently under development).
+
+# Usage
+
+The API is configured in `solid_idp/main.py`. To run a
+
+``` 
+
+```
 
 # Contributions
 
-This library is in the early stages of development and is intended to demonstrate the flow of Solid client authentication.
-
-Review, contributions, and discussion are welcome.
+This library is in the early stages of development and is intended to demonstrate the flow of Solid client authentication. Review, contributions, and discussion are welcome.
 
 # Acknowledgements
 
 This library relies on draft SOLID specifications authored by the [Solid project](https://solidproject.org/).
-
-It's the future. :rocket:
