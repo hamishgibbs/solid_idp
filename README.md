@@ -8,7 +8,7 @@ The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.g
 
 **Please note:** This library is in the early stages of development. There are no guarantees of security or conformance with the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification. The library is intended as an example implementation of client authentication in the SOLID ecosystem.
 
-# Features
+## Features
 
 The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID resource servers. In this library, we implement an Identity Provider (IdP) which can register agents, display agents' `PersonalProfileDocument`, and grant access tokens to clients using the [SOLID_OIDC authentication flow](https://solid.github.io/authentication-panel/solid-oidc) (DPoP-bound Access Tokens, OIDC ID Tokens, and refresh tokens).
 
@@ -37,7 +37,7 @@ For a description of the overall authentication flow see [OpenID Connect Core 1.
 
 Development of this library relies heavily on the [SOLID_OIDC Primer](https://solid.github.io/authentication-panel/solid-oidc-primer/).  
 
-# Resources
+## Resources
 
 This implementation is based on the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification.
 
@@ -47,7 +47,7 @@ Python RDF support is provided by [rdflib](https://github.com/RDFLib/rdflib).
 
 This library is being developed alongside an example implementation of a [Solid resource server](https://github.com/hamishgibbs/solid_server) (currently under development) and an example implementation of a [Solid client](https://github.com/hamishgibbs/solid_client) (currently under development).
 
-# Usage
+## Usage
 
 The API is configured in `solid_idp/main.py`. To start the development server, enter the `solid_idp` directory and initiate the server with `uvicorn`.
 
@@ -62,10 +62,10 @@ An example of a client authentication flow is located in `examples/example_clien
 
 Examples currently assume that the IdP is available at http://127.0.0.1:8000/ and the Client is available at http://127.0.0.1:8001/.
 
-# Contributions
+## Contributions
 
 This library is in the early stages of development and is intended to demonstrate the flow of Solid client authentication. Review, contributions, and discussion are welcome.
 
-# Acknowledgements
+## Acknowledgements
 
 This library relies on draft SOLID specifications authored by the [Solid Project](https://solidproject.org/).
