@@ -1,7 +1,5 @@
 import os
 import json
-from datetime import datetime, timedelta
-from typing import Optional
 from solid_idp import db as userdb
 from solid_idp import data as userdata
 from solid_idp import auth
@@ -13,7 +11,6 @@ from fastapi import Depends, FastAPI, HTTPException, status, Form, Header
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from pydantic import BaseModel
 from authlib.jose import jwt, JsonWebKey
 
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -38,27 +35,6 @@ IDP_PUBLIC_KEY = JsonWebKey.import_key(public_key, {'kty': 'EC'})
 USER_METADATA = './.db/oidc/users/users'
 CLIENT_METADATA = './.db/oidc/client'
 USER_DATA = './data'
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
-
-class TokenData(BaseModel):
-    username: Optional[str] = None
-
-
-class User(BaseModel):
-    username: str
-    email: Optional[str] = None
-    full_name: Optional[str] = None
-    disabled: Optional[bool] = None
-
-
-class UserInDB(User):
-    hashed_password: str
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -280,6 +256,7 @@ async def get_access_token(grant_type: str,
         )
 
     # decode JWT headers and extract public key
+    # this should be replaced by a GET to the public key of the token issuer
     dpop_token_header = base64.b64decode(DPoP.split('.')[1] + '=' * 5)
     dpop_token_header = json.loads(dpop_token_header.decode('utf-8'))
     dpop_public_key = dpop_token_header['jwk']

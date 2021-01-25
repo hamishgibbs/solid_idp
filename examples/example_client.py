@@ -69,12 +69,11 @@ dpop_token_header = {
 
 dpop_token_payload = {
     "htu": "http://127.0.0.1:8001",
-    "jwk": CLIENT_PUBLIC_KEY,
+    "cnf": {"jwk": CLIENT_PUBLIC_KEY},
     "htm": "POST",
     "jti": uuid.uuid4().__str__(),
     "iat": int(datetime.datetime.timestamp(datetime.datetime.now()))
 }
-
 
 dpop_token = jwt.encode(dpop_token_header, dpop_token_payload, CLIENT_PRIVATE_KEY)
 
