@@ -7,9 +7,10 @@ import secrets
 import hashlib
 import base64
 
-from fastapi import Depends, FastAPI, HTTPException, status, Form, Header
+from fastapi import Depends, FastAPI, HTTPException, status, Form, Header, Request
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.templating import Jinja2Templates
 from passlib.context import CryptContext
 from authlib.jose import jwt, JsonWebKey
 
@@ -35,6 +36,8 @@ IDP_PUBLIC_KEY = JsonWebKey.import_key(public_key, {'kty': 'EC'})
 USER_METADATA = './.db/oidc/users/users'
 CLIENT_METADATA = './.db/oidc/client'
 USER_DATA = './data'
+
+templates = Jinja2Templates(directory="../templates")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -120,9 +123,9 @@ async def register(username: str = Form(default=None),
 
 
 @app.get("/login")
-async def get_login():
+async def get_login(request: Request):
 
-    return {'message': 'This is the login endpoint.'}
+    return templates.TemplateResponse("login.html", {"request": request, "id": id})
 
 
 @app.post("/login")
