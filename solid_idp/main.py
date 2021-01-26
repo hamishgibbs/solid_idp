@@ -82,8 +82,8 @@ def authenticate_user(username: str, password: str):
 
 
 @app.get("/")
-async def home():
-    return {'message': 'I am an example SOLID IdP.'}
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 
 
 @app.get("/{username}/card")
@@ -202,15 +202,6 @@ async def post_login(form_data: OAuth2PasswordRequestForm = Depends(),
         return {'message': 'Successfully logged in.'}
 
 
-
-    # on successful login - generate tokens here and pass them back to client
-    # WebID callback URL
-    # this is not the correct flow as it is not happening in the browser but
-    # serves as a good example of the auth flow?
-
-    # may need to retun the code direct from the authorize endpoint now
-
-
 @app.get("/.well-known/openid_configuration")
 async def get_oid_configuration():
 
@@ -224,9 +215,6 @@ async def authorize(response_type: str,
                     client_id: str,
                     code_challenge_method: str,
                     code_challenge: str):
-                    # This does not follow a realistic implementation
-                    # which would involve a redirect to the login page and
-                    # proceed on successful login
 
     auth.check_client_callback(response_type=response_type,
                                redirect_uri=redirect_uri,
@@ -234,22 +222,6 @@ async def authorize(response_type: str,
                                client_id=client_id,
                                code_challenge_method=code_challenge_method,
                                code_challenge=code_challenge)
-
-    # Implement auth here
-
-    # stand-in for actual user authentication
-    #user = authenticate_user(user_username, user_password)
-
-    #if not user:
-    #    raise HTTPException(
-    #        status_code=status.HTTP_401_UNAUTHORIZED,
-    #        detail="Incorrect username or password",
-    #        headers={"WWW-Authenticate": "Bearer"},
-    #    )
-
-    # if auth is successful up to now
-
-    # code generation should be done in the login after successful auth
 
     response = RedirectResponse('/login', status_code=303)
 
