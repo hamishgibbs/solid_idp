@@ -134,8 +134,7 @@ async def register(username: str = Form(default=None),
                                                   data_path=USER_DATA,
                                                   iss='http://127.0.0.1:8000')
 
-        return {"message": "Successfully created user {username}.".format(
-                            username=username)}
+        return RedirectResponse(url='/login', status_code=303)
 
 
 @app.get("/login")
@@ -145,7 +144,8 @@ async def get_login(request: Request):
 
 
 @app.post("/login")
-async def post_login(form_data: OAuth2PasswordRequestForm = Depends(),
+async def post_login(request: Request,
+                     form_data: OAuth2PasswordRequestForm = Depends(),
                      redirect_uri: Optional[str] = Cookie(None),
                      response_type: Optional[str] = Cookie(None),
                      scope: Optional[str] = Cookie(None),
@@ -199,7 +199,14 @@ async def post_login(form_data: OAuth2PasswordRequestForm = Depends(),
 
     else:
 
-        return {'message': 'Successfully logged in.'}
+        return RedirectResponse(url='/login_success', status_code=303)
+
+
+@app.get("/login_success")
+async def get_login_success(request: Request):
+
+    return templates.TemplateResponse("login_success.html",
+                                      {"request": request})
 
 
 @app.get("/.well-known/openid_configuration")
