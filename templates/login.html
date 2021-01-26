@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
-{% block head %}
-    <style type="text/css">
-        .important { color: #336699; }
-    </style>
-{% endblock %}
 {% block content %}
-    <h1>Login</h1>
-    <p class="important">
-      Login here.
-    </p>
+    <div class="">
+      <div class="login_container">
+        <h2>Login</h2>
+      </div>
+      <div class="login_container">
+        <form action="" method="post">
+          <input type="text" placeholder="Username" name="username" value="{{
+            request.form.username }}"><br />
+           <input type="password" placeholder="Password" name="password" value="{{
+            request.form.password }}"><br /><br />
+          <input class="btn btn-default" type="submit" value="Login">
+        </form>
+      </div>
+    </div>
 {% endblock %}

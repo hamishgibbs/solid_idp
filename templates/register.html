@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <div class="">
+      <div class="login_container">
+        <h2>Register</h2>
+      </div>
+      <div class="login_container">
+        <form action="" method="post">
+          <input type="text" placeholder="Username" name="username" value="{{
+            request.form.username }}"><br />
+          <input type="password" placeholder="Password" name="password" value="{{
+            request.form.password }}"><br />
+          <input type="text" placeholder="Email" name="email" value="{{
+            request.form.password }}"><br />
+          <input type="text" placeholder="Full Name" name="full_name" value="{{
+            request.form.password }}"><br />
+          <input class="btn btn-default" type="submit" value="Register">
+        </form>
+      </div>
+    </div>
+{% endblock %}

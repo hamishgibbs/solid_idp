@@ -10,6 +10,7 @@ import base64
 from fastapi import Depends, FastAPI, HTTPException, status, Form, Header, Request
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from passlib.context import CryptContext
 from authlib.jose import jwt, JsonWebKey
@@ -37,7 +38,7 @@ USER_METADATA = './.db/oidc/users/users'
 CLIENT_METADATA = './.db/oidc/client'
 USER_DATA = './data'
 
-templates = Jinja2Templates(directory="../templates")
+templates = Jinja2Templates(directory="templates")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -45,6 +46,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
 
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -90,6 +92,17 @@ async def get_oidc_registration(username: str):
     return FileResponse(profile_path)
 
 
+@app.get("/register")
+async def get_register(request: Request,
+                       username: str = Form(default=None),
+                       password: str = Form(default=None),
+                       email: str = Form(default=None),
+                       full_name: str = Form(default=None),
+                       disabled: bool = Form(default=None)):
+
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
 @app.post("/register")
 async def register(username: str = Form(default=None),
                    password: str = Form(default=None),
@@ -119,13 +132,14 @@ async def register(username: str = Form(default=None),
                                                   data_path=USER_DATA,
                                                   iss='http://127.0.0.1:8000')
 
-        return {"message": "Successfully created user."}
+        return {"message": "Successfully created user {username}.".format(
+                            username=username)}
 
 
 @app.get("/login")
 async def get_login(request: Request):
 
-    return templates.TemplateResponse("login.html", {"request": request, "id": id})
+    return templates.TemplateResponse("login.html", {"request": request})
 
 
 @app.post("/login")
