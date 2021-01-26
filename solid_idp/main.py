@@ -176,7 +176,7 @@ async def post_login(form_data: OAuth2PasswordRequestForm = Depends(),
             "client_id": client_id,
             "code_challenge_method": code_challenge_method,
             "code_challenge": code_challenge,
-            "webid": 'http://127.0.0.1:8000/' + client_id + '/card#me',
+            "webid": 'http://127.0.0.1:8000/' + form_data.username + '/card#me',
             "response_types": response_type.split(' '),
             "scope": scope.split(' ')
         }
@@ -282,7 +282,7 @@ async def get_access_token(grant_type: str,
     # this should be replaced by a GET to the public key of the token issuer
     dpop_token_header = base64.b64decode(DPoP.split('.')[1] + '=' * 5)
     dpop_token_header = json.loads(dpop_token_header.decode('utf-8'))
-    dpop_public_key = dpop_token_header['jwk']
+    dpop_public_key = dpop_token_header['cnf']['jwk']
 
     try:
 
