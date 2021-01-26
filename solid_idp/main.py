@@ -7,13 +7,14 @@ import secrets
 import hashlib
 import base64
 
-from fastapi import Depends, FastAPI, HTTPException, status, Form, Header, Request
+from fastapi import Depends, FastAPI, HTTPException, status, Form, Header, Request, Cookie
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from passlib.context import CryptContext
 from authlib.jose import jwt, JsonWebKey
+from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization as crypto_serialization
@@ -47,6 +48,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -143,7 +145,13 @@ async def get_login(request: Request):
 
 
 @app.post("/login")
-async def post_login(form_data: OAuth2PasswordRequestForm = Depends()):
+async def post_login(form_data: OAuth2PasswordRequestForm = Depends(),
+                     redirect_uri: Optional[str] = Cookie(None),
+                     response_type: Optional[str] = Cookie(None),
+                     scope: Optional[str] = Cookie(None),
+                     client_id: Optional[str] = Cookie(None),
+                     code_challenge_method: Optional[str] = Cookie(None),
+                     code_challenge: Optional[str] = Cookie(None)):
 
     user = authenticate_user(form_data.username, form_data.password)
 
@@ -154,14 +162,53 @@ async def post_login(form_data: OAuth2PasswordRequestForm = Depends()):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    if redirect_uri is not None:
+
+        client_code = secrets.token_hex(22)
+
+        client_keystore_path = CLIENT_METADATA + '/client_auth_code.json'
+
+        with open(client_keystore_path, 'r') as f:
+
+            client_keystore = json.loads(f.read())
+
+        client_keystore[client_code] = {
+            "client_id": client_id,
+            "code_challenge_method": code_challenge_method,
+            "code_challenge": code_challenge,
+            "webid": 'http://127.0.0.1:8000/' + client_id + '/card#me',
+            "response_types": response_type.split(' '),
+            "scope": scope.split(' ')
+        }
+
+        with open(client_keystore_path, 'w') as f:
+
+            json.dump(client_keystore, f)
+
+        response = RedirectResponse(url=redirect_uri + '?code=' + client_code,
+                                    status_code=303)
+
+        response.delete_cookie("response_type")
+        response.delete_cookie("redirect_uri")
+        response.delete_cookie("scope")
+        response.delete_cookie("client_id")
+        response.delete_cookie("code_challenge_method")
+        response.delete_cookie("code_challenge")
+
+        return response
+
+    else:
+
+        return {'message': 'Successfully logged in.'}
+
+
+
     # on successful login - generate tokens here and pass them back to client
     # WebID callback URL
     # this is not the correct flow as it is not happening in the browser but
     # serves as a good example of the auth flow?
 
     # may need to retun the code direct from the authorize endpoint now
-
-    return {'message': 'Successfully logged in.'}
 
 
 @app.get("/.well-known/openid_configuration")
@@ -170,63 +217,50 @@ async def get_oid_configuration():
     return FileResponse('./static/openid-configuration.json')
 
 
-@app.get("/authorize/")
+@app.get("/authorize")
 async def authorize(response_type: str,
                     redirect_uri: str,
                     scope: str,
                     client_id: str,
                     code_challenge_method: str,
-                    code_challenge: str,
+                    code_challenge: str):
                     # This does not follow a realistic implementation
                     # which would involve a redirect to the login page and
                     # proceed on successful login
-                    user_username: str,
-                    user_password: str):
 
-    auth_result = auth.check_client_callback(response_type=response_type,
-                                             redirect_uri=redirect_uri,
-                                             scope=scope,
-                                             client_id=client_id,
-                                             code_challenge_method=code_challenge_method,
-                                             code_challenge=code_challenge)
+    auth.check_client_callback(response_type=response_type,
+                               redirect_uri=redirect_uri,
+                               scope=scope,
+                               client_id=client_id,
+                               code_challenge_method=code_challenge_method,
+                               code_challenge=code_challenge)
 
-    if type(auth_result) is HTTPException:
-
-        raise auth_result
+    # Implement auth here
 
     # stand-in for actual user authentication
-    user = authenticate_user(user_username, user_password)
+    #user = authenticate_user(user_username, user_password)
 
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+    #if not user:
+    #    raise HTTPException(
+    #        status_code=status.HTTP_401_UNAUTHORIZED,
+    #        detail="Incorrect username or password",
+    #        headers={"WWW-Authenticate": "Bearer"},
+    #    )
 
     # if auth is successful up to now
 
-    client_keystore_path = CLIENT_METADATA + '/client_auth_code.json'
+    # code generation should be done in the login after successful auth
 
-    with open(client_keystore_path, 'r') as f:
+    response = RedirectResponse('/login', status_code=303)
 
-        client_keystore = json.loads(f.read())
+    response.set_cookie(key="response_type", value=response_type)
+    response.set_cookie(key="redirect_uri", value=redirect_uri)
+    response.set_cookie(key="scope", value=scope)
+    response.set_cookie(key="client_id", value=client_id)
+    response.set_cookie(key="code_challenge_method", value=code_challenge_method)
+    response.set_cookie(key="code_challenge", value=code_challenge)
 
-    client_code = secrets.token_hex(22)
-
-    client_keystore[client_code] = {
-        "client_id": client_id,
-        "code_challenge": code_challenge,
-        "webid": 'http://127.0.0.1:8000/' + client_id + '/card#me',
-        "response_types": response_type.split(' '),
-        "scope": scope.split(' ')
-    }
-
-    with open(client_keystore_path, 'w') as f:
-
-        json.dump(client_keystore, f)
-
-    return RedirectResponse(redirect_uri + '?code=' + client_code)
+    return response
 
 
 @app.post("/token")

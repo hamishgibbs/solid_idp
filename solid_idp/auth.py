@@ -51,7 +51,7 @@ def check_client_callback(response_type: str,
 
     except AssertionError:
 
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Unable to confirm redirect URI.",
         )
