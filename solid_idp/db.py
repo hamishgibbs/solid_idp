@@ -1,29 +1,26 @@
-import os
-import json
+from pymongo import MongoClient
 
 
-def init_db(path: str = os.getcwd()):
+def get_user(db: MongoClient,
+             username: str):
 
-    db_paths = [
-        '/.db',
-        '/.db/oidc',
-        '/.db/oidc/users',
-        '/.db/oidc/users/users'
-    ]
+    users = db.users
 
-    for p in db_paths:
+    if username in users.distinct('user'):
 
-        if not os.path.exists(path + p):
+        user = users.find_one({'username': username})
 
-            os.mkdir(path + p)
+        return user
 
 
-def create_user(username: str,
+def create_user(db: MongoClient,
+                username: str,
                 hashed_password: str,
                 email: str,
                 full_name: str = None,
-                disabled: bool = False,
-                db: str = '.db/oidc/users/users'):
+                disabled: bool = False):
+
+    users = db.users
 
     user = {
         'username': username,
@@ -33,8 +30,4 @@ def create_user(username: str,
         'disabled': disabled
     }
 
-    user_fn = db + '/' + username + '.json'
-
-    with open(user_fn, "w") as f:
-
-        json.dump(user, f)
+    users.insert_one(user)

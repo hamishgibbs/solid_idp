@@ -20,6 +20,11 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 
+from pymongo import MongoClient
+
+client = MongoClient('mongodb://0.0.0.0:27017')
+db = client['data']
+
 # generate key pairs for the session
 key = ec.generate_private_key(ec.SECP256R1(), backend=crypto_default_backend())
 
@@ -58,21 +63,9 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(username: str):
-
-    user_fn = username + '.json'
-
-    if user_fn in os.listdir(USER_METADATA):
-
-        with open(USER_METADATA + '/' + user_fn, "r") as f:
-            user_dict = json.load(f)
-
-        return user_dict
-
-
 def authenticate_user(username: str, password: str):
 
-    user = get_user(username)
+    user = userdb.get_user(db, username)
 
     if not user:
         return False
@@ -123,12 +116,12 @@ async def register(username: str = Form(default=None),
 
     else:
 
-        userdb.create_user(username=username,
+        userdb.create_user(db=db,
+                           username=username,
                            hashed_password=get_password_hash(password),
                            email=email,
                            full_name=full_name,
-                           disabled=disabled,
-                           db=USER_METADATA)
+                           disabled=disabled)
 
         userdata.create_personal_profile_document(username=username,
                                                   data_path=USER_DATA,
