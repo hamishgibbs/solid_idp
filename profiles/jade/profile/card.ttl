@@ -1,0 +1,13 @@
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix schema: <http://schema.org/> .
+@prefix solid: <http://www.w3.org/ns/solid/terms#> .
+
+<http://127.0.0.1:8000/jade/card> a foaf:PersonalProfileDocument ;
+    foaf:maker <http://127.0.0.1:8000/jade/card#me> ;
+    foaf:primaryTopic <http://127.0.0.1:8000/jade/card#me> .
+
+<http://127.0.0.1:8000/jade/card#me> a schema:Person,
+        foaf:Person ;
+    solid:oidcIssuer "http://127.0.0.1:8000" ;
+    foaf:name "Test" .
+
