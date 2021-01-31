@@ -8,6 +8,14 @@ The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.g
 
 **Please note:** This library is in the early stages of development. There are no guarantees of security or conformance with the draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification. The library is intended as an example implementation of client authentication in the SOLID ecosystem.
 
+## See Also
+
+This library is being developed alongside example implementations of:
+
+* [Solid Resource Server](https://github.com/hamishgibbs/solid_server).
+* [Solid Client](https://github.com/hamishgibbs/solid_client).
+
+
 ## Features
 
 The draft [SOLID-OIDC](https://solid.github.io/authentication-panel/solid-oidc/) specification defines the authentication flow for clients accessing resources hosted on SOLID resource servers. In this library, we implement an Identity Provider (IdP) which can register agents, display agents' `PersonalProfileDocument`, and grant access tokens to clients using the [SOLID_OIDC authentication flow](https://solid.github.io/authentication-panel/solid-oidc) (DPoP-bound Access Tokens, OIDC ID Tokens, and refresh tokens).
@@ -44,8 +52,6 @@ This implementation is based on the draft [SOLID-OIDC](https://solid.github.io/a
 The API interface is written using [FastAPI](https://github.com/tiangolo/fastapi).
 
 Python RDF support is provided by [rdflib](https://github.com/RDFLib/rdflib).
-
-This library is being developed alongside an example implementation of a [Solid resource server](https://github.com/hamishgibbs/solid_server) (currently under development) and an example implementation of a [Solid client](https://github.com/hamishgibbs/solid_client) (currently under development).
 
 ## Usage
 
