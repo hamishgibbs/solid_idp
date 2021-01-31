@@ -6,7 +6,7 @@ def get_user(db: MongoClient,
 
     users = db.users
 
-    if username in users.distinct('user'):
+    if username in users.distinct('username'):
 
         user = users.find_one({'username': username})
 

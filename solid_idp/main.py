@@ -14,6 +14,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from passlib.context import CryptContext
 from authlib.jose import jwt, JsonWebKey
+from authlib.oauth2.rfc7636.challenge import compare_s256_code_challenge
 from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -40,9 +41,7 @@ public_key = key.public_key().public_bytes(
 IDP_PRIVATE_KEY = JsonWebKey.import_key(private_key, {'kty': 'EC'})
 IDP_PUBLIC_KEY = JsonWebKey.import_key(public_key, {'kty': 'EC'})
 
-USER_METADATA = './.db/oidc/users/users'
-CLIENT_METADATA = './.db/oidc/client'
-USER_DATA = './data'
+USER_DATA = './profiles'
 
 templates = Jinja2Templates(directory="templates")
 
@@ -76,6 +75,9 @@ def authenticate_user(username: str, password: str):
 
 @app.get("/")
 async def home(request: Request):
+
+    print(request.method)
+
     return templates.TemplateResponse("home.html", {"request": request})
 
 
@@ -105,9 +107,9 @@ async def register(username: str = Form(default=None),
                    full_name: str = Form(default=None),
                    disabled: bool = Form(default=None)):
 
-    user_fn = username + '.json'
+    users = db.users
 
-    if user_fn in os.listdir(USER_METADATA):
+    if username in users.distinct('username'):
 
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -157,26 +159,19 @@ async def post_login(request: Request,
 
     if redirect_uri is not None:
 
+        clients = db.clients
+
         client_code = secrets.token_hex(22)
 
-        client_keystore_path = CLIENT_METADATA + '/client_auth_code.json'
+        code_store = {"client_code": client_code,
+                      "client_id": client_id,
+                      "code_challenge_method": code_challenge_method,
+                      "code_challenge": code_challenge,
+                      "webid": 'http://127.0.0.1:8000/' + form_data.username + '/card#me',
+                      "response_types": response_type.split(' '),
+                      "scope": scope.split(' ')}
 
-        with open(client_keystore_path, 'r') as f:
-
-            client_keystore = json.loads(f.read())
-
-        client_keystore[client_code] = {
-            "client_id": client_id,
-            "code_challenge_method": code_challenge_method,
-            "code_challenge": code_challenge,
-            "webid": 'http://127.0.0.1:8000/' + form_data.username + '/card#me',
-            "response_types": response_type.split(' '),
-            "scope": scope.split(' ')
-        }
-
-        with open(client_keystore_path, 'w') as f:
-
-            json.dump(client_keystore, f)
+        clients.insert_one(code_store)
 
         response = RedirectResponse(url=redirect_uri + '?code=' + client_code,
                                     status_code=303)
@@ -244,17 +239,20 @@ async def get_access_token(grant_type: str,
                            DPoP: str = Header(None),
                            content_type: str = Header(None)):
 
-    client_keystore_path = CLIENT_METADATA + '/client_auth_code.json'
+    #client_keystore_path = CLIENT_METADATA + '/client_auth_code.json'
 
-    with open(client_keystore_path, 'r') as f:
+    #with open(client_keystore_path, 'r') as f:
 
-        client_keystore = json.loads(f.read())
+    #    client_keystore = json.loads(f.read())
+    clients = db.clients
+
+    client_keystore = clients.find_one({'client_code': code})
 
     # check to see that the client_id in the keystore corresponds
     # to the client_id from the request
     try:
 
-        assert client_keystore[code]['client_id'] == client_id
+        assert client_keystore['client_id'] == client_id
 
     except AssertionError:
 
@@ -267,9 +265,7 @@ async def get_access_token(grant_type: str,
     # stored in the keystore
     try:
 
-        challenge_checked = base64.b64encode(hashlib.sha256(code_verifier.encode('ascii')).digest())
-
-        assert challenge_checked.decode("utf-8") == client_keystore[code]['code_challenge']
+        assert compare_s256_code_challenge(code_verifier, client_keystore['code_challenge'])
 
     except AssertionError:
 
@@ -304,27 +300,27 @@ async def get_access_token(grant_type: str,
     all_tokens = {
         "expires_in": 600,
         "token_type": "DPoP",
-        "scope": " ".join(client_keystore[code]['scope'])
+        "scope": " ".join(client_keystore['scope'])
     }
 
     access_token = auth.gen_access_token(thumbprint=dpop_public_key_thumbprint,
-                                         webid=client_keystore[code]['webid'],
+                                         webid=client_keystore['webid'],
                                          client_id=client_id,
                                          PRIVATE_KEY=IDP_PRIVATE_KEY,
                                          expire=600)
 
     all_tokens['access_token'] = access_token
 
-    if 'open_id' in client_keystore[code]['scope']:
+    if 'open_id' in client_keystore['scope']:
 
-        id_token = auth.gen_id_token(webid=client_keystore[code]['webid'],
+        id_token = auth.gen_id_token(webid=client_keystore['webid'],
                                      client_id=client_id,
                                      PRIVATE_KEY=IDP_PRIVATE_KEY,
                                      expire=600)
 
         all_tokens['id_token'] = id_token
 
-    if 'offline_access' in client_keystore[code]['scope']:
+    if 'offline_access' in client_keystore['scope']:
 
         # save this in a persistent store to permit refresh requests
         refresh_token = auth.gen_refresh_token(PRIVATE_KEY=IDP_PRIVATE_KEY,
@@ -335,3 +331,9 @@ async def get_access_token(grant_type: str,
     headers = {"content-type": "application/json"}
 
     return JSONResponse(content=all_tokens, headers=headers)
+
+
+@app.get("/jwks")
+async def jwks():
+
+    return [IDP_PUBLIC_KEY]

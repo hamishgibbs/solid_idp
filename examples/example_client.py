@@ -7,7 +7,8 @@ import urllib
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
-from authlib.jose import jwt, JsonWebKey
+from authlib.jose import jwt, JsonWebKey, JsonWebToken
+from authlib.oauth2.rfc7636 import create_s256_code_challenge
 
 import uuid
 import datetime
@@ -22,7 +23,8 @@ res.json()
 random_secret = secrets.token_hex(10)
 
 # ascii encode, sha256 hash, b64 encode tmp secret
-code_challenge = base64.b64encode(hashlib.sha256(random_secret.encode('ascii')).digest())
+code_challenge = create_s256_code_challenge(random_secret)
+#code_challenge = base64.b64encode(hashlib.sha256(random_secret.encode('ascii')).digest())
 
 # request an authorisation code from IdP
 auth_endpoint = res.json()['authorization_endpoint']
@@ -33,15 +35,12 @@ auth_params = {'response_type': 'code',
                'scope': 'open_id profile offline_access',
                'client_id': 'http://127.0.0.1:8001/webid#this',
                'code_challenge_method': 'S256',
-               'code_challenge': code_challenge,
-               'user_username': 'test_user',
-               'user_password': 'secret'}
+               'code_challenge': code_challenge}
 
 auth_res = r.get(auth_endpoint,
                  params=auth_params)
 
 auth_res.status_code
-auth_res.json()
 
 auth_res.url
 
@@ -69,9 +68,9 @@ dpop_token_header = {
 
 dpop_token_payload = {
     "htu": "http://127.0.0.1:8001",
-    "cnf": {"jwk": CLIENT_PUBLIC_KEY},
     "htm": "POST",
     "jti": uuid.uuid4().__str__(),
+    "cnf": {"jwk": CLIENT_PUBLIC_KEY},
     "iat": int(datetime.datetime.timestamp(datetime.datetime.now()))
 }
 

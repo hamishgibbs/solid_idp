@@ -7,15 +7,6 @@ from fastapi import HTTPException, status
 from authlib.jose import jwt
 
 
-def init_client_keystore(client_path: str = '.db/oidc/client'):
-
-    client_keystore_path = client_path + '/client_auth_code.json'
-
-    with open(client_keystore_path, 'w') as f:
-
-        json.dump({}, f)
-
-
 def check_client_callback(response_type: str,
                           redirect_uri: str,
                           scope: str,
@@ -82,7 +73,7 @@ def gen_access_token(thumbprint: str,
         "iss": "http://127.0.0.1:8000",
         "aud": "solid",
         "cnf": {
-            "jkt": thumbprint
+            "jwk": thumbprint
         },
         "client_id": client_id,
         "jti": uuid.uuid4().__str__(),
