@@ -1,6 +1,6 @@
 # Solid IdP
 
-![GitHub Actions (Tests)](https://github.com/hamishgibbs/pull_facebook_data_for_good/workflows/Tests/badge.svg)
+![GitHub Actions (Tests)](https://github.com/hamishgibbs/solid_idp/workflows/Tests/badge.svg)
 
 An example implementation of a [Solid](https://solidproject.org/) identity provider implemented in Python.
 
