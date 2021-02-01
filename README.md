@@ -1,6 +1,7 @@
 # Solid IdP
 
 ![GitHub Actions (Tests)](https://github.com/hamishgibbs/solid_idp/workflows/Tests/badge.svg)
+[![codecov](https://codecov.io/gh/hamishgibbs/solid_idp/branch/master/graph/badge.svg)](https://codecov.io/gh/hamishgibbs/solid_idp)
 
 An example implementation of a [Solid](https://solidproject.org/) identity provider implemented in Python.
 
