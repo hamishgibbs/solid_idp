@@ -12,7 +12,7 @@ The goal of this library is to conform to the draft [SOLID-OIDC](https://solid.g
 
 This library is being developed alongside example implementations of:
 
-* [Solid Resource Server](https://github.com/hamishgibbs/solid_server).
+* [Solid Resource Server (RS)](https://github.com/hamishgibbs/solid_server).
 * [Solid Client](https://github.com/hamishgibbs/solid_client).
 
 
@@ -53,6 +53,36 @@ The API interface is written using [FastAPI](https://github.com/tiangolo/fastapi
 
 Python RDF support is provided by [rdflib](https://github.com/RDFLib/rdflib).
 
+### Installation
+
+**From a clone:**
+
+To develop this project locally, clone it onto your machine:
+
+```shell
+git clone https://github.com/hamishgibbs/solid_idp.git
+```
+
+Enter the project directory:
+
+```shell
+cd solid_idp
+```
+
+Install the package with:
+
+```shell
+pip install .
+```
+
+**From GitHub:**
+
+To install the package directly from GitHub run:
+
+```shell
+pip install git+https://github.com/hamishgibbs/solid_idp.git
+```
+
 ## Usage
 
 The API is configured in `solid_idp/main.py`. To start the development server, initiate the server with `uvicorn`.
@@ -65,7 +95,7 @@ An example of an agent authentication flow is located in `examples/example_user.
 
 An example of a client authentication flow is located in `examples/example_client.py`.  
 
-Examples currently assume that the IdP is available at http://127.0.0.1:8000/ and the Client is available at http://127.0.0.1:8001/.
+The current implementation assumes that the IdP is available at http://127.0.0.1:8000/, the Client is available at http://127.0.0.1:8001/, and the RS is available at http://127.0.0.1:8002/.
 
 ## Contributions
 
